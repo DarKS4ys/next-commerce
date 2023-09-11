@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAULUgW6lxiN5wOv26GvZgoiTbblDCaIQU",
-  authDomain: "next-commerce-61.firebaseapp.com",
+  apiKey: "",
+  authDomain: "",
   projectId: "next-commerce-61",
-  storageBucket: "next-commerce-61.appspot.com",
-  messagingSenderId: "289332011163",
-  appId: "1:289332011163:web:c494a8d2fc92556377e63e",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
   measurementId: "G-97KRNXBVEZ"
 };
 
