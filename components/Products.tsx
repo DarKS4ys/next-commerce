@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import ProductCard from './ProductCard';
+import {motion} from 'framer-motion'
+
 
 interface Product {
   id: string;
@@ -14,6 +16,20 @@ interface Product {
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
+
+  const fadeInAnimationVariants = { // for framer motion  
+    initial: {
+        opacity: 0,
+        y: 100,
+    },
+    animate: (index: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: 0.05 * index,
+        }
+    })
+}
 
   useEffect(() => {
     // Create a query for the 'products' collection
@@ -38,13 +54,28 @@ export default function Products() {
   return (
     <div className='flex p-8 gap-8'>
       {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          productId={product.id}
-          productImg={product.imageUrl}
-          productName={product.name}
-          productPrice={product.price}
-        />
+        <motion.div
+        key={product.id}
+        variants={fadeInAnimationVariants}
+        initial="initial"
+        whileInView="animate"
+        viewport={{
+          once: true,
+        }}
+        whileHover={{
+          scale: 1.03
+        }}
+        whileTap={{
+          scale: 1
+        }}
+        >
+          <ProductCard
+            productId={product.id}
+            productImg={product.imageUrl}
+            productName={product.name}
+            productPrice={product.price}
+          />
+        </motion.div>
       ))}
     </div>
   );

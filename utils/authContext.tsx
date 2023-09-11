@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "./firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { DocumentReference, doc, setDoc } from "firebase/firestore";
+import { DocumentReference, doc, getDoc, setDoc } from "firebase/firestore";
 
 // Define types for user and context
 interface User {
@@ -16,6 +16,7 @@ interface FirebaseContextType {
   user: User | null;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  loading: boolean;
 }
 
 // Create the Firebase context
@@ -26,12 +27,11 @@ const FirebaseContext = createContext<FirebaseContextType | undefined>(
 // Create a FirebaseProvider component
 export function FirebaseProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
       if (authUser) {
-        setUser({ uid: authUser.uid, email: authUser.email, name: authUser.displayName, photoUrl: authUser.photoURL});
-
         const userObj: User = {
           uid: authUser.uid,
           email: authUser.email,
@@ -39,12 +39,21 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
           photoUrl: authUser.photoURL,
         };
 
-        await saveUserDataToFirestore(userObj);
-        
+        // Check if the user document already exists in Firestore
+        const userDocRef: DocumentReference = doc(db, "users", userObj.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+          // User document does not exist, set the status to "user"
+          await saveUserDataToFirestore(userObj);
+        }
+
         setUser(userObj);
       } else {
         setUser(null);
       }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -78,7 +87,7 @@ export function FirebaseProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <FirebaseContext.Provider value={{ user, signInWithGoogle, signOut }}>
+    <FirebaseContext.Provider value={{ user, signInWithGoogle, signOut, loading }}>
       {children}
     </FirebaseContext.Provider>
   );

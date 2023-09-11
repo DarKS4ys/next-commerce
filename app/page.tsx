@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Products from "@/components/Products";
 
@@ -7,7 +8,7 @@ export default function Home() {
       <Navbar/>
       <div className="text-center flex flex-col justify-center items-center gap-3">
       <div className="gradient-01 animate-pulse duration-4 opacity-80 absolute w-full h-[100px] top-10 z-[-10] mt-32"></div>
-        <h1 className="text-7xl mt-64 font-medium">NEXT COMMERCE</h1>
+          <Header/>
         <div className="flex flex-col mt-32">
         <Products/>
         </div>

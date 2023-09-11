@@ -30,7 +30,6 @@ export default function Product() {
                     if (productSnap.exists()) {
                       const productData = productSnap.data() as ProductTypes;
                         if (productData) {
-                          console.log(productData)
                           setProduct(productData)
                         }
                     }
