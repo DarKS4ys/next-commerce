@@ -52,7 +52,7 @@ export default function Products() {
   }, []);
 
   return (
-    <div className='flex p-8 gap-8'>
+    <div className='flex flex-col sm:flex-row p-8 gap-8'>
       {products.map((product) => (
         <motion.div
         key={product.id}
