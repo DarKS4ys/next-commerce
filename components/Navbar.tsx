@@ -10,6 +10,8 @@ import {BiLoader} from 'react-icons/bi'
 import {AiFillShopping, AiOutlineShopping} from 'react-icons/ai'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/utils/firebase'
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import CartItems from './CartItems'
 
 export default function Navbar() {
   const { user, signInWithGoogle, signOut, loading } = useFirebase()
@@ -50,8 +52,6 @@ export default function Navbar() {
   }
 
   let profileItems; // Declare profileItems variable outside the conditional blocks
-
-  console.log(userStatus)
 
   if (userStatus === 'admin') {
     profileItems = [
@@ -117,12 +117,25 @@ export default function Navbar() {
             <>
               {user.photoUrl ? 
               <>
-              <Link href={'/cart'}>
-                <div className='group hover:scale-110 transition active:scale-100'>
-                <AiOutlineShopping className="group-hover:hidden transition" size={24}/>
-                <AiFillShopping className="group-hover:block hidden transition" size={24}/>
-                </div>
-              </Link>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <div className='cursor-pointer group hover:scale-110 transition active:scale-100'>
+                    <AiOutlineShopping className="group-hover:hidden transition" size={24}/>
+                    <AiFillShopping className="group-hover:block hidden transition" size={24}/>
+                  </div>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Cart</SheetTitle>
+                  </SheetHeader>
+                  <CartItems/>
+                  <SheetFooter>
+                  <SheetClose asChild>
+                    <Button type="submit">Save changes</Button>
+                  </SheetClose>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
                 <Dropdown
                   trigger={['click']}
                   placement="bottomRight"
